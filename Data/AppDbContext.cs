@@ -10,6 +10,6 @@ namespace StudentAPI.Data
         }
 
         public DbSet<Student> Students { get; set; }  // Bảng Students
-
+ public DbSet<Class> Classes { get; set; }
     }
 }
