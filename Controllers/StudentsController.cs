@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using AutoMapper;
-using StudentAPI.Models;
 using StudentAPI.Data;
+using StudentAPI.Models;
+
 
 namespace StudentAPI.Controllers
 {
@@ -19,39 +19,47 @@ namespace StudentAPI.Controllers
             _mapper = mapper;
         }
 
-        // API PUT - Cập nhật sinh viên theo ID
+        //  PUT - Cập nhật sinh viên theo ID (dùng AutoMapper)
         [HttpPut("{id}")]
         public IActionResult UpdateStudent(int id, [FromBody] StudentDto studentDto)
         {
             var student = _context.Students.FirstOrDefault(s => s.Id == id);
-            
             if (student == null)
-            {
                 return NotFound();
-            }
 
-            // Cập nhật thông tin sinh viên, không thay đổi lớp học
-            student.Name = studentDto.Name;
-            student.Age = studentDto.Age;
-            // Đảm bảo không thay đổi lớp học
+            // Dùng AutoMapper để cập nhật các thuộc tính
+            _mapper.Map(studentDto, student);
 
             _context.SaveChanges();
 
-            return Ok(student);
+            var updatedDto = _mapper.Map<StudentDto>(student);
+            return Ok(updatedDto);
         }
 
-        // API GET - Lấy danh sách sinh viên với phân trang
+        //  GET - Lấy danh sách sinh viên có phân trang
         [HttpGet]
-        public IActionResult GetStudents(int page = 1, int pageSize = 10)
+        public IActionResult GetStudents(int pageNumber = 1, int pageSize = 10)
         {
+            var totalItems = _context.Students.Count();
+            var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
             var students = _context.Students
-                .Skip((page - 1) * pageSize)
+                .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToList();
 
             var studentDtos = _mapper.Map<List<StudentDto>>(students);
-            
-            return Ok(studentDtos);
+
+            var response = new
+            {
+                currentPage = pageNumber,
+                totalPages = totalPages,
+                totalItems = totalItems,
+                pageSize = pageSize,
+                data = studentDtos
+            };
+
+            return Ok(response);
         }
     }
 }

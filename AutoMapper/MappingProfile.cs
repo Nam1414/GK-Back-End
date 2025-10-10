@@ -7,8 +7,9 @@ namespace StudentAPI.AutoMapper
     {
         public MappingProfile()
         {
-            // Ánh xạ hai chiều giữa Student và StudentDto
             CreateMap<Student, StudentDto>().ReverseMap();
+            CreateMap<StudentCreateDto, Student>();
+            CreateMap<StudentUpdateDto, Student>();
         }
     }
 }
