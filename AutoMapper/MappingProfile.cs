@@ -7,9 +7,18 @@ namespace StudentAPI.AutoMapper
     {
         public MappingProfile()
         {
-            CreateMap<Student, StudentDto>().ReverseMap();
+             // Map Student ↔ StudentDto
+            CreateMap<Student, StudentDto>()
+                .ForMember(dest => dest.ClassName, opt => opt.MapFrom(src => src.Class != null ? src.Class.Name : null))
+                .ReverseMap()
+                .ForMember(dest => dest.Class, opt => opt.Ignore());
+
+            // Map cho tạo mới
             CreateMap<StudentCreateDto, Student>();
-            CreateMap<StudentUpdateDto, Student>();
+
+            // Map cho cập nhật (không đổi lớp)
+            CreateMap<StudentUpdateDto, Student>()
+                .ForMember(dest => dest.ClassId, opt => opt.Ignore());
         }
     }
 }
