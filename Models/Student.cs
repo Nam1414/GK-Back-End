@@ -5,7 +5,7 @@ namespace StudentAPI.Models
         public int Id { get; set; }
         public string Name { get; set; } = "";
         public DateTime DateOfBirth { get; set; }
-        public string ClassName { get; set; } = "";// Không thay đổi lớp học
+
           // Khóa ngoại đến Class
         public int ClassId { get; set; }
         public Class? Class { get; set; }
