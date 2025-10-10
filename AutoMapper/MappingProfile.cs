@@ -7,12 +7,10 @@ namespace StudentAPI.AutoMapper
     {
         public MappingProfile()
         {
-             // Map Student ↔ StudentDto
+            // Map Student ↔ StudentDto
             CreateMap<Student, StudentDto>()
-                .ForMember(dest => dest.ClassName, opt => opt.MapFrom(src => src.Class != null ? src.Class.Name : null))
-                .ReverseMap()
-                .ForMember(dest => dest.Class, opt => opt.Ignore());
-
+                .ForMember(dest => dest.ClassName, opt => opt.MapFrom(src => src.Class != null ? src.Class.Name : null));
+            
             // Map cho tạo mới
             CreateMap<StudentCreateDto, Student>();
 
